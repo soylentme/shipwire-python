@@ -9,7 +9,9 @@ This package requires Requests package version 2.4.3 or higher.
 
 ```python
 from shipwire import *
-s = Shipwire(username="neildurbin@gmail.com", password="numb3r",host="api.beta.shipwire.com")
+s = Shipwire(username="neildurbin@gmail.com", 
+             password="numb3r",
+             host="api.beta.shipwire.com")
 
 order = s.order.get(id=41949255)
 order_holds = s.order.holds(id=41949255)
