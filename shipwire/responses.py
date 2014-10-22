@@ -13,6 +13,8 @@ class ShipwireResponse(object):
         self.location = j.get('resourceLocation')
         self.resource_location = self.location
         self.resource = j.get('resource')
+        self.warnings = j.get('warnings')
+        self.errors = j.get('errors')
 
 """
 The following class names are paired with the methods listed
@@ -52,7 +54,7 @@ class ListResponse(ShipwireResponse):
 
         return items
 
-class CreateResponse(ShipwireResponse):
+class CreateResponse(ListResponse):
     pass
 
 class GetResponse(ShipwireResponse):
@@ -61,19 +63,19 @@ class GetResponse(ShipwireResponse):
 class ModifyResponse(ShipwireResponse):
     pass
 
-class HoldsResponse(ShipwireResponse):
+class HoldsResponse(ListResponse):
     pass
 
-class ItemsResponse(ShipwireResponse):
+class ItemsResponse(ListResponse):
     pass
 
-class ReturnsResponse(ShipwireResponse):
+class ReturnsResponse(ListResponse):
     pass
 
-class TrackingsResponse(ShipwireResponse):
+class TrackingsResponse(ListResponse):
     pass
 
-class ProductsResponse(ShipwireResponse):
+class ProductsResponse(ListResponse):
     pass
 
 class QuoteResponse(ShipwireResponse):

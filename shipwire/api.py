@@ -33,7 +33,7 @@ class Shipwire():
     def __getattr__(self, name):
         if name.startswith('__') or self.method:
             """ can't chain another attribute after the method and
-            without __ then copying causes recurssion. """
+            when __ the copying causes recurssion. """
             raise AttributeError(name)
         elif self.resource:
             if name in METHOD_CALL_DICT.keys():
@@ -48,7 +48,6 @@ class Shipwire():
                 raise ShipwireError('The \'%s\' resource is not currently defined.'
                                     % name)
         new_instance = copy.copy(self)
-        #FIXME issue with self.resource being set to False sometimes when it shouldn't
         self.resource = self.method = False
         return new_instance
 
@@ -96,4 +95,3 @@ class ShipwireError(Exception):
     general error interacting with the API.
     """
     pass
-

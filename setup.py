@@ -10,4 +10,5 @@ setup(
   download_url = 'https://github.com/soylentme/shipwire-python/tarball/0.1', # I'll explain this in a second
   keywords = ['shipwire', 'api', 'wrapper', 'soylent'], # arbitrary keywords
   classifiers = [],
+  install_requires = ['requests > 2.4.3'],
 )
