@@ -35,6 +35,8 @@ response = s.orders.list(updatedAfter="2014-10-19T21:09:26.030625")
 
 For the full list of parameters that you can pass to each method, please visit https://www.shipwire.com/w/developers/ and look under 'API RESOURCES' for the given resource and method.
 
+#####Methods:
+
 This shipwire package currently provides the following methods for Shipwire API calls:
 
 ```python
@@ -49,6 +51,8 @@ s.rate.quote(json={}) # returns rate quotes based on the json information you su
 s.order.create(json=your_json) # creates a new order in the shipwire system and returns a list of the orders created.
 s.order.modify(id=41949255,json=your_json) # modifies a specified order in the shipwire system and returns the order resource.
 ```
+
+#####Responses:
 
 Each call to the Shipwire API returns a response object with several standard attributes. The following attributes are available on each method call:
 
