@@ -3,12 +3,11 @@ shipwire-python
 
 A Python abstraction layer around the Shipwire API.
 
-
 This package requires Requests package version 2.4.3 or higher.
 
-#NOTE status code only respresents http status. Error codes are placed in 'error' parameter in json response.
+##### For now the .status code only respresents http status. Error codes are placed in 'error' parameter in json response.
 
-
+```python
 from shipwire import *
 s = Shipwire(username="neildurbin@gmail.com", password="numb3r",host="api.beta.shipwire.com")
 
@@ -19,7 +18,9 @@ order_returns = s.order.returns(id=41949255)
 order_trackings = s.order.trackings(id=41949255)
 order_list = s.orders.list(updatedAfter="2014-10-19T21:09:26.030625")
 products = s.stock.products()
+```
 
+```javascript
 j = {
     "options": {
         "currency": "USD",
@@ -47,9 +48,13 @@ j = {
         ]
     }
 }
+```
 
+```python
 quote = s.rate.quote(json=j)
+```
 
+```javascript
 j = {
     "orderNo": "foobar1",
     "externalId": "rFooBar2",
@@ -113,11 +118,14 @@ j = {
         }
     }
 }
+```
 
+```python
 order_create = s.order.create(json=j)
+```
 
-#NOTE status code only respresents http status. Error codes are placed in 'error' parameter in json response.
 
+```javascript
 j = {
     "orderNo": "foobar1",
     "externalId": "rFooBar2",
@@ -181,9 +189,13 @@ j = {
         }
     }
 }
+```
 
+```python
 order_modify = s.order.modify(id=41949255,json=j)
+```
 
+```javascript
 j = {
     "shipTo": {
         "email": "audrey.horne@greatnothern.com",
@@ -200,6 +212,8 @@ j = {
         "isPoBox": 0
     }
 }
+```
 
+```python
 order_modify = s.order.modify(id=41949255,json=j)
-
+```
