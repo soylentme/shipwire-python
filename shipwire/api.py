@@ -7,12 +7,12 @@ SHIPWIRE_AVAILABLE_RESOURCES = ['order', 'orders', 'stock', 'rate']
 """ Add or remove methods and API calls here. """
 #TODO Add namespacing of keys for possible name collisions.
 METHOD_CALL_DICT = {'create': ['POST', 'orders'],
-                    'get': ['GET', 'orders'],
-                    'modify': ['PUT', 'orders'],
-                    'holds': ['GET', 'orders', 'holds'],
-                    'items': ['GET', 'orders', 'items'],
-                    'returns': ['GET', 'orders', 'returns'],
-                    'trackings': ['GET', 'orders', 'trackings'],
+                    'get': ['GET', 'orders', ''],
+                    'modify': ['PUT', 'orders', ''],
+                    'holds': ['GET', 'orders', '/holds'],
+                    'items': ['GET', 'orders', '/items'],
+                    'returns': ['GET', 'orders', '/returns'],
+                    'trackings': ['GET', 'orders', '/trackings'],
                     'list': ['GET', 'orders'],
                     'products': ['GET', 'stock'],
                     'quote': ['POST', 'rate'], }
@@ -28,6 +28,7 @@ class Shipwire():
         self.resource  = False
         self.method = False
         self.call_params = False
+        self.json = ''
 
     def __getattr__(self, name):
         if name.startswith('__') or self.method:
@@ -54,6 +55,8 @@ class Shipwire():
     def __call__(self, *args, **kwargs):
         if self.method is False: # only run calls on methods, not resources.
             raise ShipwireError('Parameters can only be passed to specific methods.')
+        if 'json' in kwargs:
+            self.json = kwargs.pop('json')
         self.call_params = kwargs
         return self._call_api()
 
@@ -62,7 +65,8 @@ class Shipwire():
         print uri
         http_method = METHOD_CALL_DICT[self.method][0]
         res = requests.request(http_method, uri, auth=self.auth,
-                               params=self.call_params)
+                               params=self.call_params,
+                               json=self.json)
         # wrap response is response classes.
         return getattr(responses, self._class_name())(res)
 
@@ -73,20 +77,17 @@ class Shipwire():
         number_words = len(METHOD_CALL_DICT[self.method])
         protocol = 'https' if self.secure else 'http'
         resource = METHOD_CALL_DICT[self.method][1]
+        base = "%s://%s/api/v%s" % (protocol, self.host,
+                                    self.api_version)
         if number_words == 2: #ex: ['GET', 'orders']
-            uri = "%s://%s/api/v%s/%s" % (protocol,
-                                          self.host,
-                                          self.api_version, resource)
+            uri = "%s/%s" % (base, resource)
         elif number_words == 3: #ex: ['GET', 'orders', 'returns']
             if 'id' not in self.call_params:
                 raise ShipwireError('An \'id\' is required for this api call.')
             method = METHOD_CALL_DICT[self.method][2]
-            uri = "%s://%s/api/v%s/%s/%s/%s" % (protocol,
-                                                self.host,
-                                                self.api_version,
-                                                resource,
-                                                self.call_params.get('id'),
-                                                method)
+            uri = "%s/%s/%s%s" % (base, resource,
+                                  self.call_params.get('id'),
+                                  method)
         return uri
 
 class ShipwireError(Exception):
