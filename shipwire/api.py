@@ -29,6 +29,7 @@ class Shipwire():
         self.method = False
         self.call_params = False
         self.json = ''
+        self.uri = ''
 
     def __getattr__(self, name):
         if name.startswith('__') or self.method:
@@ -60,14 +61,14 @@ class Shipwire():
         return self._call_api()
 
     def _call_api(self):
-        uri = self._make_uri()
+        self.uri = uri = self._make_uri()
         print uri
         http_method = METHOD_CALL_DICT[self.method][0]
         res = requests.request(http_method, uri, auth=self.auth,
                                params=self.call_params,
                                json=self.json)
         # wrap response is response classes.
-        return getattr(responses, self._class_name())(res)
+        return getattr(responses, self._class_name())(res, self)
 
     def _class_name(self):
         return '%sResponse' % self.method.capitalize()

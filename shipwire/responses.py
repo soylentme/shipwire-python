@@ -1,9 +1,12 @@
 import requests
+#import grequests #hold until grequests package update
+#import copy
 
 HTTP_SUCCESS = 200
+SHIPWIRE_GET_ALL_LIMIT = 200
 
 class ShipwireResponse(object):
-    def __init__(self, response):
+    def __init__(self, response, shipwire_instance):
         r = response
         self.response = r
         j = r.json()
@@ -15,6 +18,7 @@ class ShipwireResponse(object):
         self.resource = j.get('resource')
         self.warnings = j.get('warnings')
         self.errors = j.get('errors')
+        self.shipwire = shipwire_instance
 
 """
 The following class names are paired with the methods listed
@@ -23,8 +27,8 @@ module you must also add a corresponding Response class below.
 """
 
 class ListResponse(ShipwireResponse):
-    def __init__(self, response):
-        super(ListResponse, self).__init__(response)
+    def __init__(self, response, shipwire_instance):
+        super(ListResponse, self).__init__(response, shipwire_instance)
 
         #check to make sure that you have a valid response
         if self.status is not HTTP_SUCCESS:
@@ -37,22 +41,51 @@ class ListResponse(ShipwireResponse):
         self.offset = r.get('offset')
         self.items = r.get('items')
         self.limit = len(self.items)
-        self.all = self._get_all
+        self.all_serial = self._get_all_serial
+        #self.all_concurrent = self._get_all_conncurrent
+        self.all = self.all_serial
 
-    def _get_all(self):
+    def _get_all_serial(self):
         # loop over all items with previous and next
         next = self.next
         req = self.response.request
         items = self.items
 
         while next:
-            resp = requests.request(req.method, next, headers=req.headers)
-            list_resp = ListResponse(resp)
+            resp = requests.request(req.method, next, auth=self.shipwire.auth)
+            list_resp = ListResponse(resp, self.shipwire)
             items.extend(list_resp.items)
             print next
             next = list_resp.next
 
         return items
+
+    """ hold for grequests package update with exception handling
+    def _get_all_conncurrent(self, size=4):
+        params_dicts = []
+        offset = 0
+        while offset < self.total:
+            params = copy.copy(self.shipwire.call_params)
+            params['offset'] = offset
+            if 'limit' not in params: #also append the limit
+                params['limit'] = SHIPWIRE_GET_ALL_LIMIT
+            params_dicts.append(params)
+            offset += params.get('limit', SHIPWIRE_GET_ALL_LIMIT)
+
+        print self.shipwire.uri
+        # stream=False, verify=True
+        rs = (grequests.get(self.shipwire.uri,auth=self.shipwire.auth,params=ps,timeout=90) for ps in params_dicts)
+        responses = grequests.map(rs,stream=True,size=size)
+
+        items = []
+        for response in responses:
+            list_resp = ListResponse(response,self.shipwire)
+            items.extend(list_resp.items)
+        return items
+
+    def _grequests_exception_handler(request, exception):
+        print 'request failed, lets try again.'
+    """
 
 class CreateResponse(ListResponse):
     pass
