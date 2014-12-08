@@ -1,6 +1,6 @@
 import requests
 import copy
-import responses
+from . import responses
 
 SHIPWIRE_AVAILABLE_RESOURCES = ['order', 'orders', 'stock', 'rate']
 
@@ -37,7 +37,7 @@ class Shipwire():
             when __ the copying causes recurssion. """
             raise AttributeError(name)
         elif self.resource:
-            if name in METHOD_CALL_DICT.keys():
+            if name in list(METHOD_CALL_DICT.keys()):
                 self.method = name
             else:
                 raise ShipwireError('The \'%s\' attribute is not currently defined.'
@@ -62,7 +62,7 @@ class Shipwire():
 
     def _call_api(self):
         self.uri = uri = self._make_uri()
-        print uri
+        print(uri)
         http_method = METHOD_CALL_DICT[self.method][0]
         res = requests.request(http_method, uri, auth=self.auth,
                                params=self.call_params,
