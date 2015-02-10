@@ -38,6 +38,7 @@ class ListResponse(ShipwireResponse):
         self.total =  r.get('total')
         self.previous = r.get('previous')
         self.next = r.get('next')
+        self.__next__ = r.get('next')
         self.offset = r.get('offset')
         self.items = r.get('items')
         self.limit = len(self.items)
