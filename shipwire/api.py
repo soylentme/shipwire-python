@@ -2,20 +2,26 @@ import requests
 import copy
 from . import responses
 
-SHIPWIRE_AVAILABLE_RESOURCES = ['order', 'orders', 'stock', 'rate']
-
 """ Add or remove methods and API calls here. """
-#TODO Add namespacing of keys for possible name collisions.
-METHOD_CALL_DICT = {'create': ['POST', 'orders'],
-                    'get': ['GET', 'orders', ''],
-                    'modify': ['PUT', 'orders', ''],
-                    'holds': ['GET', 'orders', '/holds'],
-                    'items': ['GET', 'orders', '/items'],
-                    'returns': ['GET', 'orders', '/returns'],
-                    'trackings': ['GET', 'orders', '/trackings'],
-                    'list': ['GET', 'orders'],
-                    'products': ['GET', 'stock'],
-                    'quote': ['POST', 'rate'], }
+METHODS = {
+    'order': {
+        'create': ['POST', 'orders'],
+        'get': ['GET', 'orders', ''],
+        'modify': ['PUT', 'orders', ''],
+        'holds': ['GET', 'orders', '/holds'],
+        'items': ['GET', 'orders', '/items'],
+        'returns': ['GET', 'orders', '/returns'],
+        'trackings': ['GET', 'orders', '/trackings'],
+        'list': ['GET', 'orders']
+    },
+    'stock': {
+        'products': ['GET', 'stock']
+    },
+    'rate': {
+        'quote': ['POST', 'rate']
+    }
+}
+
 
 class Shipwire():
     """ Shipwire API class."""
@@ -37,13 +43,13 @@ class Shipwire():
             when __ the copying causes recurssion. """
             raise AttributeError(name)
         elif self.resource:
-            if name in list(METHOD_CALL_DICT.keys()):
+            if name in list(METHODS[self.resource].keys()):
                 self.method = name
             else:
                 raise ShipwireError('The \'%s\' attribute is not currently defined.'
                                     % name)
         else: # since self.resource and method_call_dict are empty this must be resource.
-            if name in SHIPWIRE_AVAILABLE_RESOURCES:
+            if name in METHODS:
                 self.resource = name
             else:
                 raise ShipwireError('The \'%s\' resource is not currently defined.'
@@ -63,7 +69,8 @@ class Shipwire():
     def _call_api(self):
         self.uri = uri = self._make_uri()
         print(uri)
-        http_method = METHOD_CALL_DICT[self.method][0]
+        endpoint = METHODS[self.resource][self.method]
+        http_method = endpoint[0]
         res = requests.request(http_method, uri, auth=self.auth,
                                params=self.call_params,
                                json=self.json)
@@ -74,9 +81,10 @@ class Shipwire():
         return '%sResponse' % self.method.capitalize()
 
     def _make_uri(self):
-        number_words = len(METHOD_CALL_DICT[self.method])
+        endpoint = METHODS[self.resource][self.method]
+        number_words = len(endpoint)
         protocol = 'https' if self.secure else 'http'
-        resource = METHOD_CALL_DICT[self.method][1]
+        resource = endpoint[1]
         base = "%s://%s/api/v%s" % (protocol, self.host,
                                     self.api_version)
         if number_words == 2: #ex: ['GET', 'orders']
@@ -84,7 +92,7 @@ class Shipwire():
         elif number_words == 3: #ex: ['GET', 'orders', 'returns']
             if 'id' not in self.call_params:
                 raise ShipwireError('An \'id\' is required for this api call.')
-            method = METHOD_CALL_DICT[self.method][2]
+            method = endpoint[2]
             uri = "%s/%s/%s%s" % (base, resource,
                                   self.call_params.get('id'),
                                   method)
