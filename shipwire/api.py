@@ -19,6 +19,20 @@ METHODS = {
     },
     'rate': {
         'quote': ['POST', 'rate']
+    },
+    'receiving': {
+        'list': ['GET', 'receivings'],
+        'create': ['POST', 'receivings'],
+        'get': ['GET', 'receivings', ''],
+        'modify': ['PUT', 'receivings', ''],
+        'cancel': ['POST', 'receivings', '/cancel'],
+        'cancel_labels': ['POST', 'receivings', '/labels/cancel'],
+        'holds': ['GET', 'receivings', '/holds'],
+        'instructions_recipients': ['GET', 'receivings',
+                                    '/instructionsRecipients'],
+        'items': ['GET', 'receivings', '/items'],
+        'shipments': ['GET', 'receivings', '/shipments'],
+        'trackings': ['GET', 'receivings', '/trackings'],
     }
 }
 
