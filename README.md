@@ -50,6 +50,17 @@ s.stock.products() # returns a list of products that are listed in your shipwire
 s.rate.quote(json={}) # returns rate quotes based on the json information you supply. See a sample of the json below.
 s.order.create(json=your_json) # creates a new order in the shipwire system and returns a list of the orders created.
 s.order.modify(id=41949255,json=your_json) # modifies a specified order in the shipwire system and returns the order resource.
+s.receiving.list() # Get an itemized list of receivings
+s.receiving.create(json=your_json) # Create a new receiving
+s.receiving.get(id=1234) # Get information about this receiving
+s.receiving.modify(id=1234,json=your_json) # Modify information about this receiving
+s.receiving.cancel(id=1234) # Cancel this receiving
+s.receiving.cancel_labels(id=1234) # Cancel shipping_labels on this receiving
+s.receiving.holds(id=1234) # Get the list of holds, if any, on this receiving
+s.receiving.instructions_recipients(id=1234) # Get email recipients and instructions for this receiving.
+s.receiving.items(id=1234) # Get the contents of this receiving
+s.receiving.shipments(id=1234) # Get shipping dimension and container information
+s.receiving.trackings(id=1234) # Get tracking information about this receiving.
 ```
 
 #####Responses:
