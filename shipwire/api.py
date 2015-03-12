@@ -12,6 +12,9 @@ METHODS = {
         'items': ['GET', 'orders', '/items'],
         'returns': ['GET', 'orders', '/returns'],
         'trackings': ['GET', 'orders', '/trackings'],
+        'list': ['GET', 'orders'],
+    },
+    'orders': {
         'list': ['GET', 'orders']
     },
     'stock': {
