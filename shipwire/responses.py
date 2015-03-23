@@ -97,6 +97,21 @@ class GetResponse(ShipwireResponse):
 class ModifyResponse(ShipwireResponse):
     pass
 
+class DeleteResponse(ShipwireResponse):
+    pass
+
+class CancelResponse(ShipwireResponse):
+    pass
+
+class ShipmentsResponse(ListResponse):
+    pass
+
+class Instructions_recipientsResponse(ListResponse):
+    pass
+
+class Cancel_labelsResponse(ListResponse):
+    pass
+
 class HoldsResponse(ListResponse):
     pass
 
@@ -114,3 +129,4 @@ class ProductsResponse(ListResponse):
 
 class QuoteResponse(ShipwireResponse):
     pass
+
