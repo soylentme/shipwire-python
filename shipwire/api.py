@@ -36,6 +36,19 @@ METHODS = {
         'items': ['GET', 'receivings', '/items'],
         'shipments': ['GET', 'receivings', '/shipments'],
         'trackings': ['GET', 'receivings', '/trackings'],
+    },
+    'webhooks': {
+        'list': ['GET', 'webhooks'],
+        'create': ['POST', 'webhooks'],
+        'get': ['GET', 'webhooks', ''],
+        'modify': ['PUT', 'webhooks', ''],
+        'delete': ['DELETE', 'webhooks', '']
+    },
+    'secrets': {
+        'list': ['GET', 'secret'],
+        'create': ['POST', 'secret'],
+        'get': ['GET', 'secret', ''],
+        'delete': ['DELETE', 'secret', '']
     }
 }
 
