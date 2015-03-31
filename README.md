@@ -72,6 +72,9 @@ s.secrets.get(id=1234) # Get info about a single secret
 s.secrets.delete(id=1234) # Delete a secret 
 ```
 
+#####Webhook Endpoints:
+Shipwire endpoints require endpoints to be secured with SSL and return 200 ok for HEAD requests.
+
 #####Responses:
 
 Each call to the Shipwire API returns a response object with several standard attributes. The following attributes are available on each method call:
