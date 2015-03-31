@@ -73,7 +73,7 @@ s.secrets.delete(id=1234) # Delete a secret
 ```
 
 #####Webhook Endpoints:
-Shipwire endpoints require endpoints to be secured with SSL and return 200 ok for HEAD requests.
+Shipwire requires webhook endpoints to be secured with SSL and return 200 ok for HEAD requests.
 
 #####Responses:
 
