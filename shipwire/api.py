@@ -36,6 +36,19 @@ METHODS = {
         'items': ['GET', 'receivings', '/items'],
         'shipments': ['GET', 'receivings', '/shipments'],
         'trackings': ['GET', 'receivings', '/trackings'],
+    },
+    'webhooks': {
+        'list': ['GET', 'webhooks'],
+        'create': ['POST', 'webhooks'],
+        'get': ['GET', 'webhooks', ''],
+        'modify': ['PUT', 'webhooks', ''],
+        'delete': ['DELETE', 'webhooks', '']
+    },
+    'secrets': {
+        'list': ['GET', 'secret'],
+        'create': ['POST', 'secret'],
+        'get': ['GET', 'secret', ''],
+        'delete': ['DELETE', 'secret', '']
     }
 }
 
@@ -85,7 +98,6 @@ class Shipwire():
 
     def _call_api(self):
         self.uri = uri = self._make_uri()
-        print(uri)
         endpoint = METHODS[self.resource][self.method]
         http_method = endpoint[0]
         res = requests.request(http_method, uri, auth=self.auth,

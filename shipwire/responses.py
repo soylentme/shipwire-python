@@ -48,16 +48,15 @@ class ListResponse(ShipwireResponse):
 
     def _get_all_serial(self):
         # loop over all items with previous and next
-        next = self.__next__
+        next_uri = self.__next__
         req = self.response.request
         items = self.items
 
-        while next:
-            resp = requests.request(req.method, next, auth=self.shipwire.auth)
+        while next_uri:
+            resp = requests.request(req.method, next_uri, auth=self.shipwire.auth)
             list_resp = ListResponse(resp, self.shipwire)
             items.extend(list_resp.items)
-            print(next)
-            next = list_resp.__next__
+            next_uri = list_resp.__next__
 
         return items
 
@@ -97,6 +96,21 @@ class GetResponse(ShipwireResponse):
 class ModifyResponse(ShipwireResponse):
     pass
 
+class DeleteResponse(ShipwireResponse):
+    pass
+
+class CancelResponse(ShipwireResponse):
+    pass
+
+class ShipmentsResponse(ListResponse):
+    pass
+
+class Instructions_recipientsResponse(ListResponse):
+    pass
+
+class Cancel_labelsResponse(ListResponse):
+    pass
+
 class HoldsResponse(ListResponse):
     pass
 
@@ -114,3 +128,4 @@ class ProductsResponse(ListResponse):
 
 class QuoteResponse(ShipwireResponse):
     pass
+

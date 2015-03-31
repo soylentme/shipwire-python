@@ -61,6 +61,15 @@ s.receiving.instructions_recipients(id=1234) # Get email recipients and instruct
 s.receiving.items(id=1234) # Get the contents of this receiving
 s.receiving.shipments(id=1234) # Get shipping dimension and container information
 s.receiving.trackings(id=1234) # Get tracking information about this receiving.
+s.webhooks.list() # Get an itemized list of webhook subscriptions
+s.webhooks.create(json={'topic':'v1.order_updated', 'url':'https://requestbin.herokuapp.com/unique_id'}) # Create a new webhook subscription
+s.webhooks.get(id=1234) # Get information about a specific webhook
+s.webhooks.modify(id=1234, json=your_json) # Change an existing webhook
+s.webhooks.delete(id=1234) # Delete an active webhook.
+s.secrets.list() # List all webhook secure secrets (used in webhook validations)
+s.secrets.create(json={'id': 123, 'secret':'fea02c613d1c3aab16...c3d74'}) # Create a new secret.
+s.secrets.get(id=1234) # Get info about a single secret
+s.secrets.delete(id=1234) # Delete a secret 
 ```
 
 #####Responses:
