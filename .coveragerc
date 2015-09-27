@@ -1,0 +1,5 @@
+[run]
+branch = 1
+cover_pylib = 0
+source = shipwire
+omit = */tests/*, */test_*.py
