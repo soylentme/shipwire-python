@@ -1,6 +1,9 @@
 shipwire-python
 ===============
 
+[![Build Status](https://travis-ci.org/soylentme/shipwire-python.svg?branch=master)](https://travis-ci.org/soylentme/shipwire-python)
+[![Coverage Status](https://coveralls.io/repos/soylentme/shipwire-python/badge.svg?branch=master&service=github)](https://coveralls.io/github/soylentme/shipwire-python?branch=master)
+
 A Python abstraction layer around the Shipwire API.
 
 #####Installing:
