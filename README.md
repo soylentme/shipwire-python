@@ -25,7 +25,7 @@ The first step in using the shipwire package is creating a new instance of the S
 
 ```python
 from shipwire import *
-s = Shipwire(username="neil@soylent.me", 
+s = Shipwire(username="neil@soylent.me",
              password="89ahdkjfnud@$@#%",
              host="api.beta.shipwire.com")
 ```
@@ -52,6 +52,7 @@ s.orders.list(updatedAfter="2014-10-19T21:09:26.030625") # returns a list of ord
 s.stock.products() # returns a list of products that are listed in your shipwire account.
 s.rate.quote(json={}) # returns rate quotes based on the json information you supply. See a sample of the json below.
 s.order.create(json=your_json) # creates a new order in the shipwire system and returns a list of the orders created.
+s.order.cancel(id=41949255) # cancels a specified order in the shipwire system.
 s.order.modify(id=41949255,json=your_json) # modifies a specified order in the shipwire system and returns the order resource.
 s.receiving.list() # Get an itemized list of receivings
 s.receiving.create(json=your_json) # Create a new receiving
@@ -72,7 +73,7 @@ s.webhooks.delete(id=1234) # Delete an active webhook.
 s.secrets.list() # List all webhook secure secrets (used in webhook validations)
 s.secrets.create(json={'id': 123, 'secret':'fea02c613d1c3aab16...c3d74'}) # Create a new secret.
 s.secrets.get(id=1234) # Get info about a single secret
-s.secrets.delete(id=1234) # Delete a secret 
+s.secrets.delete(id=1234) # Delete a secret
 ```
 
 #####Webhook Endpoints:
@@ -84,7 +85,7 @@ Each call to the Shipwire API returns a response object with several standard at
 
 ```python
 response.status # returns the HTTP status code of the HTTP response, not to be confused with the Shipwire API status which can be found in the .errors and .warnings attributes.
-response.message # returns a human readable equivalent of response.status for the HTTP response 
+response.message # returns a human readable equivalent of response.status for the HTTP response
 response.resource # returns json object of the top level resource object
 response.json # returns the full json response provided by the Shipwire API
 response.response # returns the full requests package response object

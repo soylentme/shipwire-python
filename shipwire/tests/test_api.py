@@ -182,6 +182,9 @@ class ShipwireTestCase(TestCase):
         self.assertIsInstance(self.client.order.modify(id=1234),
                               responses.ShipwireResponse)
 
+        self.assertIsInstance(self.client.order.cancel(id=1234),
+                              responses.CancelResponse)
+
         self.assertIsInstance(self.client.order.holds(id=1234),
                               responses.ListResponse)
 

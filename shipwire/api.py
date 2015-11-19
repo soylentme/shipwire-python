@@ -8,6 +8,7 @@ METHODS = {
         'create': ['POST', 'orders'],
         'get': ['GET', 'orders', ''],
         'modify': ['PUT', 'orders', ''],
+        'cancel': ['POST', 'orders', '/cancel'],
         'holds': ['GET', 'orders', '/holds'],
         'items': ['GET', 'orders', '/items'],
         'returns': ['GET', 'orders', '/returns'],
