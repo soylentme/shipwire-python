@@ -3,7 +3,7 @@ import copy
 import requests
 
 from . import responses
-from .exceptions import ResponseError, ShipwireError
+from .exceptions import ResponseError, ShipwireError, TimeoutError
 
 """ Add or remove methods and API calls here. """
 METHODS = {
@@ -61,7 +61,7 @@ class Shipwire():
     """ Shipwire API class."""
     def __init__(self, username='neil@example.com', password='your-password',
                  host='api.shipwire.com', api_version=3, secure=True,
-                 raise_on_errors=False, **kwargs):
+                 raise_on_errors=False, timeout=None, **kwargs):
         self.host = host
         self.api_version = api_version
         self.auth = requests.auth.HTTPBasicAuth(username, password)
@@ -72,6 +72,7 @@ class Shipwire():
         self.json = ''
         self.uri = ''
         self.raise_on_errors = raise_on_errors
+        self.timeout = timeout
 
     def __getattr__(self, name):
         if name.startswith('__') or self.method:
@@ -106,9 +107,13 @@ class Shipwire():
         self.uri = uri = self._make_uri()
         endpoint = METHODS[self.resource][self.method]
         http_method = endpoint[0]
-        res = requests.request(http_method, uri, auth=self.auth,
-                               params=self.call_params,
-                               json=self.json)
+
+        try:
+            res = requests.request(http_method, uri, auth=self.auth,
+                                   params=self.call_params,
+                                   json=self.json, timeout=self.timeout)
+        except requests.exceptions.Timeout as exc:
+            raise TimeoutError(exc)
 
         if res.status_code >= 400 and self.raise_on_errors:
             raise ResponseError(res)

@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+from requests.exceptions import ConnectTimeout, ReadTimeout
+
 from shipwire import api, responses
 
 try:
@@ -208,6 +210,27 @@ class ShipwireTestCase(TestCase):
         self.request.return_value = StubResponse(500, {})
 
         self.client.order.get(id=12345)
+
+    def test_call_supports_timeouts(self):
+        self.client.timeout = expected = (1.2, 3.4)
+        self.client.order.get(id=12345)
+
+        self.assertEqual(expected,
+                         self.request.call_args[1]['timeout'])
+
+    def test_call_wraps_connect_timeouts(self):
+        self.client.timeout = 5.0
+        self.request.side_effect = ConnectTimeout()
+
+        with self.assertRaises(api.TimeoutError):
+            self.client.order.get(id=12345)
+
+    def test_call_wraps_read_timeouts(self):
+        self.client.timeout = 5.0
+        self.request.side_effect = ReadTimeout()
+
+        with self.assertRaises(api.TimeoutError):
+            self.client.order.get(id=12345)
 
     def test_call_returns_correct_order_class(self):
         self.assertIsInstance(self.client.order.list(),

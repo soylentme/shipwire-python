@@ -21,3 +21,10 @@ class ResponseError(ShipwireError):
             'Unexpected Status Code (%d): %s' %
             (response.status_code, message))
         self.response = response
+
+
+class TimeoutError(ShipwireError):
+    """
+    Exception raised when a timeout occurs.
+    """
+    pass
