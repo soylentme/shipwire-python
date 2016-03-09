@@ -107,6 +107,26 @@ response.limit # returns a count of the current group
 response.all() # returns a list of all the items in the entire selection. Please note that this method can be time consuming and lead to timeout errors by the Shipwire API.
 ```
 
+##### Unsuccessful requests:
+
+Should Shipwire return a response indicating a failure (defined as
+having a status code greater than or equal to 400), a
+`shipwire.ResponseError` will be raised if desired.  You can
+control this behavior by passing `raise_on_errors=True` when creating
+your client:
+
+```python
+from shipwire import Shipwire
+
+client = Shipwire(username="...", password="...", raise_on_errors=True)
+
+client.order.get(id="nonexistent")
+# raises shipire.ResponseError
+```
+
+By default, this behavior is disabled to be backwards-compatible with
+previous versions of the library.
+
 #####Methods that require information passed in json:
 You must supply information in json form for the rate.quote, order.create, and order.modify methods. Examples of the json data to be supplied can be found on the shipwire developer website at https://www.shipwire.com/w/developers/ or also in the text below.
 

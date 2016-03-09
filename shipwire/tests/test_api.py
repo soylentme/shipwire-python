@@ -3,14 +3,34 @@ from unittest import TestCase
 from shipwire import api, responses
 
 try:
-    from unittest.mock import MagicMock, patch
+    from unittest.mock import patch
 except ImportError:
-    from mock import MagicMock, patch
+    from mock import patch
 
 
-@patch('shipwire.requests.request', new=MagicMock())
+class StubResponse(object):
+    "A canned response with a similar API to requests.Response"
+
+    def __init__(self, status, json):
+        self.status_code = status
+        self._json = json
+
+    def json(self):
+        return self._json
+
+    @property
+    def content(self):
+        return str(self.json())
+
+
 class ShipwireTestCase(TestCase):
     def setUp(self):
+        patcher = patch('shipwire.requests.request')
+        self.addCleanup(patcher.stop)
+        self.request = patcher.start()
+
+        self.request.return_value = StubResponse(200, {})
+
         self.client = api.Shipwire()
 
     def assert_url(self, client, url):
@@ -168,6 +188,26 @@ class ShipwireTestCase(TestCase):
         self.client.order.get(id=12345)
         uri = api.requests.request.call_args[0][1]
         self.assertTrue(uri.startswith('http://'))
+
+    def test_call_raises_on_400_status_when_indicated(self):
+        self.client.raise_on_errors = True
+        self.request.return_value = StubResponse(403, {})
+
+        with self.assertRaises(api.ResponseError):
+            self.client.order.get(id=12345)
+
+    def test_call_raises_on_500_status_when_indicated(self):
+        self.client.raise_on_errors = True
+        self.request.return_value = StubResponse(500, {})
+
+        with self.assertRaises(api.ResponseError):
+            self.client.order.get(id=12345)
+
+    def test_call_doesnt_raise_when_indicated(self):
+        self.client.raise_on_errors = False
+        self.request.return_value = StubResponse(500, {})
+
+        self.client.order.get(id=12345)
 
     def test_call_returns_correct_order_class(self):
         self.assertIsInstance(self.client.order.list(),
