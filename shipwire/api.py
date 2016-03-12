@@ -13,10 +13,12 @@ METHODS = {
         'modify': ['PUT', 'orders', ''],
         'cancel': ['POST', 'orders', '/cancel'],
         'holds': ['GET', 'orders', '/holds'],
+        'clear_holds': ['POST', 'orders', '/holds/clear'],
         'items': ['GET', 'orders', '/items'],
         'returns': ['GET', 'orders', '/returns'],
         'trackings': ['GET', 'orders', '/trackings'],
         'list': ['GET', 'orders'],
+        'split_orders': ['GET', 'orders', '/splitOrders'],
     },
     'orders': {
         'list': ['GET', 'orders']
@@ -40,6 +42,17 @@ METHODS = {
         'items': ['GET', 'receivings', '/items'],
         'shipments': ['GET', 'receivings', '/shipments'],
         'trackings': ['GET', 'receivings', '/trackings'],
+        'labels': ['GET', 'receivings', '/labels'],
+    },
+    'returns': {
+        'list': ['GET', 'returns'],
+        'create': ['POST', 'returns'],
+        'get': ['GET', 'returns', ''],
+        'cancel': ['POST', 'returns', '/cancel'],
+        'holds': ['GET', 'returns', '/holds'],
+        'items': ['GET', 'returns', '/items'],
+        'trackings': ['GET', 'returns', '/trackings'],
+        'labels': ['GET', 'returns', '/labels'],
     },
     'webhooks': {
         'list': ['GET', 'webhooks'],

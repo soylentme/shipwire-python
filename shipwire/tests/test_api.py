@@ -102,11 +102,17 @@ class ShipwireTestCase(TestCase):
         self.client.order.holds(id=12345)
         self.assert_url_method(self.client, 'GET', '/orders/12345/holds')
 
+        self.client.order.clear_holds(id=12345)
+        self.assert_url_method(self.client, 'POST', '/orders/12345/holds/clear')
+
         self.client.order.returns(id=12345)
         self.assert_url_method(self.client, 'GET', '/orders/12345/returns')
 
         self.client.order.trackings(id=12345)
         self.assert_url_method(self.client, 'GET', '/orders/12345/trackings')
+
+        self.client.order.split_orders(id=12345)
+        self.assert_url_method(self.client, 'GET', '/orders/12345/splitOrders')
 
     def test_call_generates_correct_stock_urls(self):
         self.client.stock.products()
@@ -153,6 +159,35 @@ class ShipwireTestCase(TestCase):
         self.client.receiving.trackings(id=54321)
         self.assert_url_method(self.client, 'GET',
                                '/receivings/54321/trackings')
+
+        self.client.receiving.labels(id=5)
+        self.assert_url_method(self.client, 'GET',
+                               '/receivings/5/labels')
+
+    def test_call_generates_correct_returns_urls(self):
+        self.client.returns.list()
+        self.assert_url_method(self.client, 'GET', '/returns')
+
+        self.client.returns.create()
+        self.assert_url_method(self.client, 'POST', '/returns')
+
+        self.client.returns.get(id=12345)
+        self.assert_url_method(self.client, 'GET', '/returns/12345')
+
+        self.client.returns.cancel(id=12345)
+        self.assert_url_method(self.client, 'POST', '/returns/12345/cancel')
+
+        self.client.returns.holds(id=12345)
+        self.assert_url_method(self.client, 'GET', '/returns/12345/holds')
+
+        self.client.returns.items(id=12345)
+        self.assert_url_method(self.client, 'GET', '/returns/12345/items')
+
+        self.client.returns.trackings(id=12345)
+        self.assert_url_method(self.client, 'GET', '/returns/12345/trackings')
+
+        self.client.returns.labels(id=12345)
+        self.assert_url_method(self.client, 'GET', '/returns/12345/labels')
 
     def test_call_generates_correct_webhooks_urls(self):
         self.client.webhooks.list()
@@ -254,10 +289,16 @@ class ShipwireTestCase(TestCase):
         self.assertIsInstance(self.client.order.items(id=1234),
                               responses.ListResponse)
 
+        self.assertIsInstance(self.client.order.clear_holds(id=1234),
+                              responses.ShipwireResponse)
+
         self.assertIsInstance(self.client.order.returns(id=1234),
                               responses.ListResponse)
 
         self.assertIsInstance(self.client.order.trackings(id=1234),
+                              responses.ListResponse)
+
+        self.assertIsInstance(self.client.order.split_orders(id=1234),
                               responses.ListResponse)
 
     def test_call_returns_correct_stock_response(self):
@@ -302,6 +343,32 @@ class ShipwireTestCase(TestCase):
 
         self.assertIsInstance(self.client.receiving.trackings(id=1234),
                               responses.ShipwireResponse)
+
+        self.assertIsInstance(self.client.receiving.labels(id=1234),
+                              responses.ListResponse)
+
+    def test_call_returns_correct_returns_response(self):
+        self.assertIsInstance(self.client.returns.list(),
+                              responses.ListResponse)
+
+        self.assertIsInstance(self.client.returns.create(),
+                              responses.ShipwireResponse)
+
+        self.assertIsInstance(self.client.returns.get(id=1234),
+                              responses.ShipwireResponse)
+
+        self.assertIsInstance(self.client.returns.cancel(id=1234),
+                              responses.ShipwireResponse)
+
+        self.assertIsInstance(self.client.returns.holds(id=1234),
+                              responses.ListResponse)
+
+        self.assertIsInstance(self.client.returns.trackings(id=1234),
+                              responses.ListResponse)
+
+        self.assertIsInstance(self.client.returns.labels(id=1234),
+                              responses.ListResponse)
+
 
     def test_call_returns_correct_webhooks_response(self):
         self.assertIsInstance(self.client.webhooks.list(),
