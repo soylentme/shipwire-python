@@ -1,6 +1,9 @@
-import requests
 import copy
+
+import requests
+
 from . import responses
+from .exceptions import ResponseError, ShipwireError, TimeoutError
 
 """ Add or remove methods and API calls here. """
 METHODS = {
@@ -57,7 +60,8 @@ METHODS = {
 class Shipwire():
     """ Shipwire API class."""
     def __init__(self, username='neil@example.com', password='your-password',
-                 host='api.shipwire.com', api_version=3, secure=True, **kwargs):
+                 host='api.shipwire.com', api_version=3, secure=True,
+                 raise_on_errors=False, timeout=None, **kwargs):
         self.host = host
         self.api_version = api_version
         self.auth = requests.auth.HTTPBasicAuth(username, password)
@@ -67,6 +71,8 @@ class Shipwire():
         self.call_params = False
         self.json = ''
         self.uri = ''
+        self.raise_on_errors = raise_on_errors
+        self.timeout = timeout
 
     def __getattr__(self, name):
         if name.startswith('__') or self.method:
@@ -101,9 +107,17 @@ class Shipwire():
         self.uri = uri = self._make_uri()
         endpoint = METHODS[self.resource][self.method]
         http_method = endpoint[0]
-        res = requests.request(http_method, uri, auth=self.auth,
-                               params=self.call_params,
-                               json=self.json)
+
+        try:
+            res = requests.request(http_method, uri, auth=self.auth,
+                                   params=self.call_params,
+                                   json=self.json, timeout=self.timeout)
+        except requests.exceptions.Timeout as exc:
+            raise TimeoutError(exc)
+
+        if res.status_code >= 400 and self.raise_on_errors:
+            raise ResponseError(res)
+
         # wrap response is response classes.
         return getattr(responses, self._class_name())(res, self)
 
@@ -127,10 +141,3 @@ class Shipwire():
                                   self.call_params.get('id'),
                                   method)
         return uri
-
-class ShipwireError(Exception):
-    """
-    Base Exception thrown by the Shipwire object when there is a
-    general error interacting with the API.
-    """
-    pass
