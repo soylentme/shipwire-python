@@ -45,9 +45,11 @@ This shipwire package currently provides the following methods for Shipwire API 
 ```python
 s.order.get(id=41949255) # returns an order resource for the given id.
 s.order.holds(id=41949255) # returns a list of holds on a given order.
+s.order.clear_holds(id=41949255) # clears holds on a given order.
 s.order.items(id=41949255) # returns a list of items in a given order.
 s.order.returns(id=41949255) # returns a list of returns for a given order.
 s.order.trackings(id=41949255) # returns a list of tracking information for a given order.
+s.order.split_orders(id=41949255) # returns a list of split orders for a given order.
 s.orders.list(updatedAfter="2014-10-19T21:09:26.030625") # returns a list of orders filtered by the parameters based to the method.
 s.stock.products() # returns a list of products that are listed in your shipwire account.
 s.rate.quote(json={}) # returns rate quotes based on the json information you supply. See a sample of the json below.
@@ -65,6 +67,15 @@ s.receiving.instructions_recipients(id=1234) # Get email recipients and instruct
 s.receiving.items(id=1234) # Get the contents of this receiving
 s.receiving.shipments(id=1234) # Get shipping dimension and container information
 s.receiving.trackings(id=1234) # Get tracking information about this receiving.
+s.receiving.labels(id=1234) # Get labels about a given receiving.
+s.returns.list() # Get a list of returns.
+s.returns.create(json=your_json) # create a new return or multiple returns.
+s.returns.get(id=1234) # returns a return resource for the given id.
+s.returns.cancel(id=1234) # cancel a return.
+s.returns.holds(id=1234) # returns a list of holds for a given return.
+s.returns.items(id=1234) # returns a list of items associated with a return.
+s.returns.trackings(id=1234) # returns tracking information associated with a given return.
+s.returns.labels(id=1234) # returns shipping labels associated with a given return.
 s.webhooks.list() # Get an itemized list of webhook subscriptions
 s.webhooks.create(json={'topic':'v1.order_updated', 'url':'https://requestbin.herokuapp.com/unique_id'}) # Create a new webhook subscription
 s.webhooks.get(id=1234) # Get information about a specific webhook
